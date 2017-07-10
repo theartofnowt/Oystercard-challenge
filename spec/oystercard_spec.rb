@@ -11,4 +11,8 @@ describe Oystercard do
     expect(oystercard).to respond_to :top_up
   end
 
+  it "test if the maximum amount is reached" do
+    expect { oystercard.top_up(Oystercard::MAX_AMOUNT) }.to raise_error("Maximum amount reached")
+  end
+
 end
