@@ -9,7 +9,13 @@ class Oystercard
 
   def top_up(amount)
     raise "Maximum amount reached" if amount >= MAX_AMOUNT
-    amount + @balance
+    @balance = amount + @balance
+  end
+
+  def deducted(fare)
+    @balance
+    @balance = @balance - fare
+
   end
 
 end
