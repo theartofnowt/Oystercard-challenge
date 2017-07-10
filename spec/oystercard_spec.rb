@@ -7,4 +7,8 @@ describe Oystercard do
     expect(oystercard.balance).to be 0
   end
 
+  it "test that the card has been topped up?" do
+    expect(oystercard).to respond_to :top_up
+  end
+
 end
