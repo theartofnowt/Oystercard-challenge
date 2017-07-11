@@ -1,4 +1,4 @@
-# class Barriers
+class Barriers
 #
 #   def initialize
 #     @cards = []
@@ -16,4 +16,4 @@
 #     true unless touch_out(card)
 #   end
 #
-# end
+end
