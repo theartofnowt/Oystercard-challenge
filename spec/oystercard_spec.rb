@@ -31,8 +31,14 @@ describe Oystercard do
     end
 
     it "in_journey? returns true after touching in" do
+      oystercard.top_up(56)
       oystercard.touch_in
       expect(oystercard).to be_in_journey
+    end
+
+    it "raise and error if there is no balance on card" do
+      oystercard = Oystercard.new
+      expect{ oystercard.touch_in }.to raise_error("No balance") 
     end
   end
 end
