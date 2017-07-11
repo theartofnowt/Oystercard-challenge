@@ -27,7 +27,12 @@ describe Oystercard do
   end
 
   it "responds to the touch_out method" do
-    expect(oystercard).to respond_to :touch_out
+    expect(oystercard).to respond_to(:touch_out).with(1).argument
+  end
+
+  it "will check that the card has an empty list of journey's by default" do
+    expect(oystercard.journey_history).to be_empty
+
   end
 
   context "A topped up card" do
@@ -45,7 +50,7 @@ describe Oystercard do
       end
 
       it "will deduct my balance by the minimum fare after touching out" do
-        expect { oystercard.touch_out }.to change { oystercard.balance } .by(-1)
+        expect { oystercard.touch_out(barriers) }.to change { oystercard.balance } .by(-1)
       end
 
       it "will remember the station when card touched in" do
@@ -53,8 +58,13 @@ describe Oystercard do
       end
 
       it "will forget the station when touched out" do
-        oystercard.touch_out
+        oystercard.touch_out(barriers)
         expect(oystercard.entry_barrier).to be nil
+      end
+
+      it "will check that it stores a journey" do
+        oystercard.touch_out(barriers)
+        expect(oystercard.journey_history).not_to be_empty
       end
     end
   end

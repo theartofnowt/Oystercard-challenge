@@ -1,6 +1,6 @@
 class Oystercard
 
-  attr_reader :balance, :entry_barrier
+  attr_reader :balance, :entry_barrier, :journey_history
   MAX_AMOUNT = 90
   MINIMUM = 1
 
@@ -8,6 +8,7 @@ class Oystercard
     @balance = 0
     @in_journey = false
     @entry_barrier = nil
+    @journey_history = []
   end
 
   def top_up(amount)
@@ -25,8 +26,9 @@ class Oystercard
     @entry_barrier = barriers
   end
 
-  def touch_out
+  def touch_out(exit_barrier)
     @balance = @balance - MINIMUM
+    @journey_history << { @entry_barrier => exit_barrier }
     @entry_barrier = nil
   end
 
