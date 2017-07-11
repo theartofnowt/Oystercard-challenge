@@ -22,31 +22,19 @@ class Oystercard
 
   def touch_in(barriers)
     raise "No balance" if @balance <= MINIMUM
-    @in_journey = true
     @entry_barrier = barriers
   end
 
   def touch_out
     @balance = @balance - MINIMUM
-    @in_journey = false
     @entry_barrier = nil
   end
 
   def in_journey?
-    @in_journey
+    if @entry_barrier == nil
+      false
+    else
+      true
+    end
   end
-
-
-
-  # def touch_in(barrier)
-  #   @cards << card
-  # end
-  #
-  # def touch_out(card)
-  #   @cards.delete(card)
-  # end
-  #
-  # def in_journey?(card)
-  #   true unless touch_out(card)
-  # end
 end
