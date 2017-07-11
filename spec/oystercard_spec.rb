@@ -36,9 +36,15 @@ describe Oystercard do
       expect(oystercard).to be_in_journey
     end
 
-    it "raise and error if there is no balance on card" do
+    it "should raise an error if there is no balance on card" do
       oystercard = Oystercard.new
-      expect{ oystercard.touch_in }.to raise_error("No balance") 
+      expect{ oystercard.touch_in }.to raise_error("No balance")
+    end
+
+    it "will deduct my balance by the minimum fare after touching out" do
+      oystercard.top_up(5)
+      oystercard.touch_in
+      expect { oystercard.touch_out }.to change { oystercard.balance } .by(-1)
     end
   end
 end
