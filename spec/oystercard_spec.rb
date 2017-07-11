@@ -2,7 +2,7 @@ require 'oystercard'
 
 describe Oystercard do
   subject(:oystercard){ described_class.new }
-  let(:barriers) { double('barriers') }
+  let(:station) { double('station') }
   let(:amount) { 5 }
 
   it "tests that an initialized card has balance of 0" do
@@ -23,7 +23,7 @@ describe Oystercard do
 
   it "should raise an error if there is no balance on card" do
     oystercard = Oystercard.new
-    expect{ oystercard.touch_in(barriers) }.to raise_error("No balance")
+    expect{ oystercard.touch_in(station) }.to raise_error("No balance")
   end
 
   it "responds to the touch_out method" do
@@ -43,27 +43,27 @@ describe Oystercard do
     end
 
     context "... and after touching in" do
-      before { oystercard.touch_in(barriers) }
+      before { oystercard.touch_in(station) }
 
       it "in_journey? returns true after touching in" do
         expect(oystercard).to be_in_journey
       end
 
       it "will deduct my balance by the minimum fare after touching out" do
-        expect { oystercard.touch_out(barriers) }.to change { oystercard.balance } .by(-1)
+        expect { oystercard.touch_out(station) }.to change { oystercard.balance } .by(-1)
       end
 
       it "will remember the station when card touched in" do
-        expect{ oystercard.touch_in(barriers)}
+        expect{ oystercard.touch_in(station)}
       end
 
       it "will forget the station when touched out" do
-        oystercard.touch_out(barriers)
+        oystercard.touch_out(station)
         expect(oystercard.entry_barrier).to be nil
       end
 
       it "will check that it stores a journey" do
-        oystercard.touch_out(barriers)
+        oystercard.touch_out(station)
         expect(oystercard.journey_history).not_to be_empty
       end
     end
