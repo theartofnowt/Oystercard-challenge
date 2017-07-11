@@ -21,4 +21,18 @@ describe Oystercard do
     expect(oystercard.deducted(2)).to eq 87
   end
 
+  describe "journeys" do
+    it "responds to the touch_in method" do
+      expect(oystercard).to respond_to :touch_in
+    end
+
+    it "responds to the touch_out method" do
+      expect(oystercard).to respond_to :touch_out
+    end
+
+    it "in_journey? returns true after touching in" do
+      oystercard.touch_in
+      expect(oystercard).to be_in_journey
+    end
+  end
 end
