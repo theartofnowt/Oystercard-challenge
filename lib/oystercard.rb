@@ -21,14 +21,14 @@ class Oystercard
     @balance = @balance - fare
   end
 
-  def touch_in(barriers)
+  def touch_in(entry_station)
     raise "No balance" if @balance <= MINIMUM
-    @entry_barrier = barriers
+    @entry_barrier = entry_station
   end
 
-  def touch_out(exit_barrier)
+  def touch_out(exit_station)
     @balance = @balance - MINIMUM
-    @journey_history << { @entry_barrier => exit_barrier }
+    @journey_history << { entry_station: @entry_barrier, exit_station: exit_station}
     @entry_barrier = nil
   end
 
