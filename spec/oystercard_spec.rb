@@ -10,60 +10,54 @@ describe Oystercard do
   end
 
   it "test that the card has been topped up?" do
-    expect(oystercard).to respond_to :top_up
+    expect{ oystercard.top_up(amount) }.to change { oystercard.balance }.by amount
   end
 
   it "test if the maximum amount is reached" do
     expect { oystercard.top_up(Oystercard::MAX_AMOUNT) }.to raise_error("Maximum amount reached")
   end
 
-  it "responds to the touch_in method" do
-    expect(oystercard).to respond_to(:touch_in).with(1).argument
-  end
-
-  it "should raise an error if there is no balance on card" do
-    oystercard = Oystercard.new
+  it "should raise an error if there is no balance on card when touched in" do
     expect{ oystercard.touch_in(station) }.to raise_error("No balance")
   end
 
-  it "responds to the touch_out method" do
-    expect(oystercard).to respond_to(:touch_out).with(1).argument
-  end
-
-  it "will check that the card has an empty list of journey's by default" do
+  it "will check that the card has an empty list of journeys by default" do
     expect(oystercard.journey_history).to be_empty
-
   end
 
   context "A topped up card" do
     before { oystercard.top_up(amount) }
 
-    it "test if fare has been deducted from card" do
-      expect(oystercard.deducted(1)).to eq (amount - 1)
+    context "not touched in and touched out" do
+      it 'will charge the penalty fare' do
+        expect{ oystercard.touch_out(station) }.to change { oystercard.balance } .by -Journey::PENALTY_FARE
+      end
+
+      it 'will store a journey' do
+        oystercard.touch_out(station)
+        expect(oystercard.journey_history).not_to be_empty
+      end
     end
 
     context "... and after touching in" do
       before { oystercard.touch_in(station) }
 
-      it "in_journey? returns true after touching in" do
+      context "touching in AGAIN before touching out" do
+        it 'will charge the penalty fare' do
+          expect{ oystercard.touch_in(station) }.to change { oystercard.balance } .by -Journey::PENALTY_FARE
+        end
+      end
+
+      it "in_journey? returns true" do
+        oystercard.touch_in(station)
         expect(oystercard).to be_in_journey
       end
 
       it "will deduct my balance by the minimum fare after touching out" do
-        expect { oystercard.touch_out(station) }.to change { oystercard.balance } .by(-1)
+        expect { oystercard.touch_out(station) }.to change { oystercard.balance } .by(-Journey::MINIMUM_FARE)
       end
 
-      it "will remember the station when card touched in" do
-        expect{ oystercard.touch_in(station)}
-      end
-
-      it "will forget the station when touched out" do
-        oystercard.touch_out(station)
-        expect(oystercard.entry_barrier).to be nil
-      end
-
-      it "will check that it stores a journey" do
-        oystercard.touch_out(station)
+      it "will store a journey" do
         expect(oystercard.journey_history).not_to be_empty
       end
     end
